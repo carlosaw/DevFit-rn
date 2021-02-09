@@ -15,9 +15,9 @@ const DayButton = styled.TouchableHighlight`
     align-items: center;
 `;
 const DayItem = styled.View`
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+    width: 35px;
+    height: 35px;
+    border-radius: 17px;
     background-color: #EEE;
     justify-content: center;
     align-items: center;

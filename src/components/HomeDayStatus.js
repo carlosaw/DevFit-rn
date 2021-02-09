@@ -127,28 +127,17 @@ export default (props) => {
                 }
                 {!dayOff && !isFuture && !isDone && !isToday &&
                     <>
-<<<<<<< HEAD
                         <BalloonBigText><Strong>Fraco!</Strong> Você falhou neste dia.</BalloonBigText>
                         <DefaultButton onPress={setDone} underlayColor="#4AC34E" bgcolor="#4AC34E" style={{marginTop:20}}>
-=======
-                        <BalloonBigText>Treino PERDIDO! Fraco! Você falhou neste dia!</BalloonBigText>
-                        <DefaultButton>
->>>>>>> 65f10bc015c23ae12d71ff0d93d4cc37e5fba3df
                             <ButtonText>MARCAR COMO FEITO</ButtonText>
                         </DefaultButton>
                     </>
                 }
                 {!dayOff && !isFuture && !isDone && isToday &&
                     <>
-<<<<<<< HEAD
                         <BalloonBigText><Strong>HOJE TEM TREINO 🚀</Strong></BalloonBigText>
-                        <BalloonText>Você tem <Strong>{timeLeft}</Strong> para treinar</BalloonText>
+                            <BalloonText>Você tem <Strong>{timeLeft}</Strong> para treinar</BalloonText>
                         <DefaultButton onPress={props.goToWorkout} underlayColor="#4AC34E" bgcolor="#4AC34E" style={{marginTop:20}}>
-=======
-                        <BalloonBigText>HOJE TEM TREINO 🚀</BalloonBigText>
-                        <BalloonText>Você tem ... para treinar</BalloonText>
-                        <DefaultButton>
->>>>>>> 65f10bc015c23ae12d71ff0d93d4cc37e5fba3df
                             <ButtonText>INICIAR TREINO</ButtonText>
                         </DefaultButton>
                     </>
