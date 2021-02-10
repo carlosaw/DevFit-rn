@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import DefaultButton from '../components/DefaultButton';
 import ExerciseItemEdit from '../components/ExerciseItemEdit';
 import CustomModal from '../components/CustomModal';
-import {v5 as uuidv5} from 'uuid';
+import uuid from 'uuid-random';
 
 const Container = styled.SafeAreaView`
     flex: 1;
@@ -125,7 +125,7 @@ const Page = (props) => {
             }
         } else {
             let ex = {
-                id:uuidv5(),
+                id:uuid(),
                 name:modalName,
                 muscle:modalMuscle,
                 sets:modalSets,
