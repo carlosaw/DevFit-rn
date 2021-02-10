@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
@@ -89,6 +89,14 @@ const Page = (props) => {
     const [modalSets, setModalSets] = useState('');
     const [modalReps, setModalReps] = useState('');
     const [modalLoad, setModalLoad] = useState('');
+
+    useEffect(()=>{
+        props.navigation.setParams({
+            workout:{id, name, exercises},
+            addWorkout:props.addWorkout,
+            editWorkout:props.editWorkout
+        });
+    }, [name, exercises]);
 
     const editExercise = (exercise) => {
         setModalId(exercise.id);
@@ -268,7 +276,7 @@ const Page = (props) => {
 }
 
 Page.navigationOptions = ({navigation}) => {
-    let isEdit = (navigation.state.params && navigation.state.params.workout)?true:false;
+    let isEdit = (navigation.state.params && navigation.state.params.workout.id)?true:false;
     
     const SaveArea = styled.TouchableHighlight`
         width: 30px;
@@ -282,8 +290,27 @@ Page.navigationOptions = ({navigation}) => {
     `;
     
     const SaveWorkoutButton = () => {
+
+        const handleSave = () => {
+            if(navigation.state.params && navigation.state.params.workout) {
+                let workout = navigation.state.params.workout;
+
+                if(workout.exercises.length > 0) {
+                    if(workout.id != '') {
+                        navigation.state.params.editWorkout(workout);
+                    } else {
+                        workout.id = uuid();
+                        navigation.state.params.addWorkout(workout);
+                    }
+                    navigation.goBack();
+                } else {
+                    alert("Você precisa ter pelo menos 1 exercício");
+                }
+            }
+        }
+
         return (
-            <SaveArea>
+            <SaveArea onPress={handleSave} underlayColor="transparent">
                 <SaveImage source={require('../assets/check-black.png')} />
             </SaveArea>
         );
@@ -306,7 +333,8 @@ const mapStateToProps = (state) => {
 // Função para alterar os dados
 const mapDispatchToProps = (dispatch) => {
     return {
-        
+        addWorkout:(workout)=>dispatch({type:'ADD_WORKOUT', payload:{workout}}),
+        editWorkout:(workout)=>dispatch({type:'EDIT_WORKOUT', payload:{workout}})
     }
 }
 
