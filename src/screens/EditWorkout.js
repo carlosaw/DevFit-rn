@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import DefaultButton from '../components/DefaultButton';
 import ExerciseItemEdit from '../components/ExerciseItemEdit';
 import CustomModal from '../components/CustomModal';
+import {v5 as uuidv5} from 'uuid';
 
 const Container = styled.SafeAreaView`
     flex: 1;
@@ -32,20 +33,21 @@ const ExercisesList = styled.FlatList`
 `;
 
 const ModalLabel = styled.Text`
-    font-size: 15px;
+    font-size: 12px;
     font-weight: bold;
     margin-top: 10px;
 `;
-const ModalMuscles = styled.View`
-    flex-direction: row;
+const ModalMuscles = styled.ScrollView`
+
 `;
 const ModalInput = styled.TextInput`
     width: 100%;
-    font-size: 14px;
+    font-size: 12px;
     color: #333;
     height: 50px;
     border-bottom-width: 1px;
     border-bottom-color: #CCC;
+    text-align: center;
 `;
 const ModalMuscle = styled.TouchableHighlight`
     width: 50px;
@@ -60,6 +62,15 @@ const ModalMuscle = styled.TouchableHighlight`
 const ModalMuscleImage = styled.Image`
     width: 35px;
     height: 35px;
+`;
+const ModalExtra = styled.View`
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+`;
+const ModalExtraItem = styled.View`
+    align-items: center;
 `;
 
 const Page = (props) => {
@@ -94,6 +105,52 @@ const Page = (props) => {
         newExercises = newExercises.filter(i=>i.id!=exercise.id);
         setExercises(newExercises);
     }
+
+    const modalSave = () => {
+        let newExercises = [...exercises];
+
+        if(modalName == '' || modalMuscle == '' || modalSets == '' || modalReps == '') {
+            alert('Preencha todas as informações!');
+            return;
+        }
+
+        if(modalId) {
+            let index = newExercises.findIndex(i=>i.id == modalId);
+            if(index > -1) {
+                newExercises[index].name = modalName;
+                newExercises[index].muscle = modalMuscle;
+                newExercises[index].sets = modalSets;
+                newExercises[index].reps = modalReps;
+                newExercises[index].load = modalLoad;
+            }
+        } else {
+            let ex = {
+                id:uuidv5(),
+                name:modalName,
+                muscle:modalMuscle,
+                sets:modalSets,
+                reps:modalReps,
+                load:modalLoad
+            };
+            newExercises.push(ex);
+        }
+        setExercises(newExercises);
+        setModalVisible(false);
+    }
+
+    const resetModal = () => {
+        setModalId('');
+        setModalName('');
+        setModalMuscle('');
+        setModalSets('');
+        setModalReps('');
+        setModalLoad('');
+    }
+
+    const addExercise = () => {
+        resetModal();
+        setModalVisible(true);
+    }
     
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
@@ -102,49 +159,49 @@ const Page = (props) => {
                     <ModalLabel>Músculo de foco</ModalLabel>
                     <ModalMuscles horizontal={true} showsHorizontalScrollIndicator={false}>
                         <ModalMuscle
-                            opacity={modalMuscle=='abs'?1:0.4}
+                            opacity={modalMuscle=='abs'?1:0.5}
                             onPress={()=>setModalMuscle('abs')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/abs.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='back'?1:0.4}
+                            opacity={modalMuscle=='back'?1:0.5}
                             onPress={()=>setModalMuscle('back')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/back.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='biceps'?1:0.4}
+                            opacity={modalMuscle=='biceps'?1:0.5}
                             onPress={()=>setModalMuscle('biceps')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/biceps.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='chest'?1:0.4}
+                            opacity={modalMuscle=='chest'?1:0.5}
                             onPress={()=>setModalMuscle('chest')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/chest.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='gluteos'?1:0.4}
+                            opacity={modalMuscle=='gluteos'?1:0.5}
                             onPress={()=>setModalMuscle('gluteos')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/gluteos.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='legs'?1:0.4}
+                            opacity={modalMuscle=='legs'?1:0.5}
                             onPress={()=>setModalMuscle('legs')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/legs.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='shoulders'?1:0.4}
+                            opacity={modalMuscle=='shoulders'?1:0.5}
                             onPress={()=>setModalMuscle('shoulders')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/shoulders.png')} />
                         </ModalMuscle>
                         <ModalMuscle
-                            opacity={modalMuscle=='triceps'?1:0.4}
+                            opacity={modalMuscle=='triceps'?1:0.5}
                             onPress={()=>setModalMuscle('triceps')}
                             underlayColor="transparent">
                             <ModalMuscleImage source={require('../assets/muscles/triceps.png')} />
@@ -153,6 +210,30 @@ const Page = (props) => {
 
                     <ModalLabel>Nome do exercício</ModalLabel>
                     <ModalInput value={modalName} onChangeText={e=>setModalName(e)} />
+
+                    <ModalExtra>
+                        <ModalExtraItem>
+                            <ModalLabel>Séries</ModalLabel>
+                            <ModalInput keyboardType="numeric" value={modalSets} onChangeText={e=>setModalSets(e)} />
+                        </ModalExtraItem>
+
+                        <ModalExtraItem>
+                            <ModalLabel>Repetições</ModalLabel>
+                            <ModalInput keyboardType="numeric" value={modalReps} onChangeText={e=>setModalReps(e)} />
+                        </ModalExtraItem>
+
+                        <ModalExtraItem>
+                            <ModalLabel>Carga</ModalLabel>
+                            <ModalInput  keyboardType="numeric" value={modalLoad} onChangeText={e=>setModalLoad(e)} />
+                        </ModalExtraItem>
+                    </ModalExtra>
+                    <DefaultButton
+                        style={{backgroundColor:"#4AC34E"}}
+                        onPress={modalSave}
+                        underlayColor="transparent"
+                    >
+                        <ButtonText style={{color:'#FFF'}}>Salvar</ButtonText>
+                    </DefaultButton>
                 </CustomModal>
                 <NameInput
                     value={name}
@@ -160,8 +241,13 @@ const Page = (props) => {
                     placeholder="Digite o nome do treino"
                 />
                 <ExercisesArea>
-                    <DefaultButton style={{backgroundColor:'#4AC34E'}}>
-                        <ButtonText style={{color:'#FFF'}}>Adicionar Exercício</ButtonText>
+                    <DefaultButton
+                    underlayColor="transparent"
+                        style={{backgroundColor:'#4AC34E'}}
+                        onPress={addExercise}    
+                    >
+                        <ButtonText
+                            style={{color:'#FFF'}}>Adicionar Exercício</ButtonText>
                     </DefaultButton>
 
                     <ExercisesList
