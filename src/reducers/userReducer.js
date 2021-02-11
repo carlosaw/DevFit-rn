@@ -21,6 +21,9 @@ export default (state = initialState, action) => {
         case 'SET_LEVEL':
             return {...state, level:action.payload.level};
             break;
+        case 'SET_LASTWORKOUT':
+            return {...state, lastWorkout:action.payload.id};
+            break;
         case 'ADD_WORKOUT':
             if(myWorkouts.findIndex(i=>i.id==action.payload.workout.id) < 0) {
                 myWorkouts.push(action.payload.workout);

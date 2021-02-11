@@ -65,9 +65,6 @@ export default (props) => {
                 </>
             </ExerciseItemArea>
         </SwipeRow>
-
-
-
         
     );
 }
