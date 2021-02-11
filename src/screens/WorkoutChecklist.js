@@ -2,70 +2,92 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
-import Workout from '../components/Workout';
+import { StatusBar } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { HeaderBackButton } from 'react-navigation-stack';
+import ExerciseItem from '../components/ExerciseItem';
 
-const Container = styled.SafeAreaView`
+
+const Container = styled.ImageBackground`
     flex: 1;
+    align-items: center;
+    background-color: #000;
+`;
+const SafeArea = styled.SafeAreaView`
+    flex: 1;
+    width: 100%;
+    align-items: center;
+    background-color: rgba(1, 59, 14, 0.9);
+`;
+
+const WorkoutHeader = styled.View`
+    flex-direction: row;
+    width: 90%;
+    height: 70px;
+    align-items: center;
+`;
+const WorkoutTitle = styled.Text`
+    flex: 1;
+    color: #FFF;
+    font-size: 20px;
+`;
+const WorkoutClose = styled.TouchableHighlight`
+    width: 50px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+`;
+const WorkoutCloseText = styled.Text`
+    font-size: 22px;
+    color: #FFF;
+    font-weight: bold;
 `;
 const WorkoutList = styled.FlatList`
+    width: 90%;
     flex: 1;
-    padding: 20px;
 `;
-const Title = styled.Text`
-    text-align: center;
-    margin-top: 30px;
-`;
+
 
 const Page = (props) => {
-
-    let lastWorkout = false;
-    if(props.lastWorkout) {
-        lastWorkout = props.myWorkouts.find(i=>i.id == props.lastWorkout);
-    }
-
-    const goWorkout = (workout) => {
-        props.navigation.navigate('WorkoutChecklist', {workout});
-    }
+    let workout = props.navigation.state.params.workout;
     
+    const [ exercises, setExercises ] = useState([...workout.exercises]);
+
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
-            <Container>
-                {lastWorkout &&
-                <>
-                    <Title>Seu último treino foi:</Title>
-                    <Workout data={lastWorkout} />
-                </>
-                }
-                <Title>Escolha seu treino de hoje:</Title>
-                <WorkoutList 
-                    data={props.myWorkouts}
+        
+        <Container source={require('../assets/fitness.jpg')}>
+            <StatusBar barStyle="light-content" />
+
+            <SafeArea>
+                <WorkoutHeader>
+                    <WorkoutTitle>{workout.name}</WorkoutTitle>
+                    <WorkoutClose
+                        onPress={()=>props.navigation.goBack()}
+                        underlayColor="transparent"
+                    >
+                        <WorkoutCloseText>X</WorkoutCloseText>
+                    </WorkoutClose>
+                </WorkoutHeader>
+                <WorkoutList
+                    data={exercises}
                     renderItem={({item})=>
-                    <Workout
-                        data={item}
-                        goAction={()=>goWorkout(item)}
-                    />
+                        <ExerciseItem
+                            data={item}
+                        />
                     }
+                    keyExtractor={item=>item.id.toString()}
                 />
-            </Container>
-        </SafeAreaView>
+            </SafeArea>
+
+        </Container>
+        
     );
 }
 
 Page.navigationOptions = ({navigation}) => {
 
-    const handleBackAction = () => {
-        navigation.dispatch(StackActions.reset({
-            index:0,
-            actions:[
-                NavigationActions.navigate({routeName:'AppTab'})
-            ]
-        }));
-    }
 
     return {
-        //header:null
+        headerShown: false
     }
 }
 // Função para pegar os dados
