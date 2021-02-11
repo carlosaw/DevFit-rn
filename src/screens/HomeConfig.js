@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StackActions, NavigationActions } from 'react-navigation';
 import { SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
@@ -50,6 +51,7 @@ const LevelItem = styled.TouchableHighlight`
 const LevelItemText = styled.Text`
     font-size: 12px;
 `;
+const ResetButton = styled.Button``;
 
 const Page = (props) => {
 
@@ -66,6 +68,18 @@ const Page = (props) => {
         }
 
         props.setWorkoutDays(newWorkoutDays);
+    }
+
+    const resetAction = () => {
+        props.reset();
+        const resetAction = StackActions.reset({
+            index:0,
+            actions:[
+                NavigationActions.navigate({routeName:'StarterStack'})
+            ]
+        });
+        props.navigation.dispatch(resetAction);
+
     }
     
     return (
@@ -111,6 +125,9 @@ const Page = (props) => {
                         <LevelItemText>Avançado</LevelItemText>
                     </LevelItem>
                 </ListArea>
+
+                <Label>Você quer resetar tudo?</Label>
+                <ResetButton title="Resetar Tudo" onPress={resetAction} />
             </Container>
         </SafeAreaView>
     );
@@ -135,7 +152,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setName:(name)=>dispatch({type:'SET_NAME', payload:{name}}),
         setWorkoutDays:(workoutDays)=>dispatch({type:'SET_WORKOUTDAYS', payload:{workoutDays}}),
-        setLevel:(level)=>dispatch({type:'SET_LEVEL', payload:{level}})
+        setLevel:(level)=>dispatch({type:'SET_LEVEL', payload:{level}}),
+        reset:()=>dispatch({type:'RESET'})
     }
 }
 
